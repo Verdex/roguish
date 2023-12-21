@@ -16,9 +16,9 @@ local function color_path(start_color, end_color, duration)
 
     local total_elapsed = 0
 
-    return function (delta) 
+    return function (delta, set_total_elapsed) 
         -- NOTE:  No table access.  Do not reference start or end color.
-        total_elapsed = total_elapsed + delta
+        total_elapsed = set_total_elapsed or (total_elapsed + delta)
         if total_elapsed <= duration then
             local i = total_elapsed / duration
             return true, sr + (r * i), sg + (g * i), sb + (b * i), sa + (a * i)
@@ -29,18 +29,22 @@ local function color_path(start_color, end_color, duration)
 end
 
 local function combine_color(cycle, ...)
+    local arg = {...}
     assert(type(cycle) == "boolean")
-    assert(arg.n > 1)
+    assert(#arg > 1)
 
     local i = 1
 
     if cycle then
-        return function (delta)
-            local incomplete, r, g, b, a = arg[i](delta)
-            if not incomplete and i >= arg.n then
+        return function (delta, set_total_elapsed)
+            local incomplete, r, g, b, a = arg[i](delta, set_total_elapsed)
+            if not incomplete and i >= #arg then
                 i = 1
+                for _, path in ipairs(arg) do
+                    path(0, 0)
+                end
                 return true, r, g, b, a 
-            elseif not incomplete and i < arg.n then
+            elseif not incomplete and i < #arg then
                 i = i + 1
                 return true, r, g, b, a
             else 
@@ -48,11 +52,11 @@ local function combine_color(cycle, ...)
             end
         end
     else
-        return function (delta)
-            local incomplete, r, g, b, a = arg[i](delta)
-            if not incomplete and i >= arg.n then
+        return function (delta, set_total_elapsed)
+            local incomplete, r, g, b, a = arg[i](delta, set_total_elapsed)
+            if not incomplete and i >= #arg then
                 return false, r, g, b, a
-            elseif not incomplete and i < arg.n then
+            elseif not incomplete and i < #arg then
                 i = i + 1
                 return true, r, g, b, a
             else 
@@ -62,4 +66,6 @@ local function combine_color(cycle, ...)
     end
 end
 
-return { color = color_path }
+return { color = color_path
+       , combine_color = combine_color 
+       }
