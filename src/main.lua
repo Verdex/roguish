@@ -1,4 +1,6 @@
 local vec = require "util/vec"
+local color = require "util/color"
+local path = require "util/path"
 
 -- this only gets called once at the beginning
 function love.load()
@@ -20,23 +22,30 @@ function love.update(dt)
     location.y = location.y + py
 
     for _, triangle in ipairs(triangles) do
-        triangle.x = triangle.x + (10 * dt)
+        triangle.x = triangle.x + (10 * dt) 
         triangle.y = triangle.y + (10 * dt)
     end
+
+    c, r, g, b, a = p(dt)
 end
 
 function angle(v1, v2) 
     return math.acos(v1:dot(v2) / (v1:mag() * v2:mag()))
 end
 
+s = color.color(1, 0, 0, 1)
+e = color.color(0, 0, 1, 1)
+p = path.color(s, e, 10)
+c, r, g, b, a = true, s:values()
+
 -- this is the only function that the graphics functions
 -- will work in
 function love.draw()
     love.graphics.clear()
-    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.setColor(r, g, b, a)
 
     for i = 1, #triangles - (#triangles % 3), 3 do
-        love.graphics.polygon("line", triangles[i].x, triangles[i].y, triangles[i+1].x, triangles[i+1].y, triangles[i+2].x, triangles[i+2].y)
+        love.graphics.polygon("fill", triangles[i].x, triangles[i].y, triangles[i+1].x, triangles[i+1].y, triangles[i+2].x, triangles[i+2].y)
     end
 
     local inside = false
