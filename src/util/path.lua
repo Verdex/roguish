@@ -1,4 +1,8 @@
 
+-- TODO divide start and end vec into intermediate N segments
+-- TODO i, x, y -> x', y' functions (i = 0: x, y = x, y and i = 1: x, y = x, y)
+-- TODO combine vec path
+
 local function vec_path(start_vec, end_vec, duration)
     assert(type(start_vec) == "table" and start_vec.type == "vec2")
     assert(type(end_vec) == "table" and end_vec.type == "vec2")
