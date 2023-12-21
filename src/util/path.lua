@@ -1,4 +1,29 @@
 
+local function vec_path(start_vec, end_vec, duration)
+    assert(type(start_vec) == "table" and start_vec.type == "vec2")
+    assert(type(end_vec) == "table" and end_vec.type == "vec2")
+    assert(type(duration) == "number")
+
+    local sx = start_vec.x
+    local sy = start_vec.y
+
+    local x = end_vec.x - sx
+    local y = end_vec.y - sy
+
+    local total_elapsed = 0
+
+    return function (delta) 
+        -- NOTE:  No table access.  Do not reference start or end vec.
+        total_elapsed = total_elapsed + delta
+        if total_elapsed <= duration then
+            local i = total_elapsed / duration
+            return true, sx + (x * i), sy + (y * i)
+        else
+            return false, sx + x, sy + y 
+        end
+    end
+end
+
 local function color_path(start_color, end_color, duration)
     assert(type(start_color) == "table" and start_color.type == "color")
     assert(type(end_color) == "table" and end_color.type == "color")
@@ -73,4 +98,5 @@ end
 return { color = color_path
        , combine_color = combine_color 
        , cycle_color = cycle_color
+       , vec = vec_path
        }
