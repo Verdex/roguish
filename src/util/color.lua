@@ -16,3 +16,5 @@ local function color(r, g, b, a)
            , values = values 
            }
 end
+
+return { color = color }
