@@ -1,3 +1,15 @@
+
+--[[
+        This is from my github.com/verdex/lua_tools repo.
+        commit hash: 02a90f60b140628bd70be37c3e899365e394236d
+
+        The original file in the original repo should be considered to be under the license
+        that is present in that repo.
+
+        This file should be considered to be considered to be under the license that is present
+        in this repo.
+--]]
+
 -- Tested with lua 5.1
 
 local function to_dict(t)
