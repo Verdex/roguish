@@ -36,9 +36,9 @@ end
 w1 = color.color(1, 0, 0, 1)
 w2 = color.color(0, 1, 0, 1)
 w3 = color.color(0, 0, 1, 1)
-p1 = path.color(w1, w2, 10)
-p2 = path.color(w2, w3, 10)
-p3 = path.color(w3, w1, 10)
+p1 = path.color(w1, w2, 3)
+p2 = path.color(w2, w3, 3)
+p3 = path.color(w3, w1, 3)
 p = path.cycle_color(p1, p2, p3)
 c, r, g, b, a = true, w1:values()
 

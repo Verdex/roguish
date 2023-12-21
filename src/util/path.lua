@@ -29,20 +29,20 @@ local function color_path(start_color, end_color, duration)
 end
 
 local function cycle_color( ...)
-    local arg = {...}
-    assert(#arg > 1)
+    local paths = {...}
+    assert(#paths > 1)
 
     local i = 1
 
     return function (delta, set_total_elapsed)
-        local incomplete, r, g, b, a = arg[i](delta, set_total_elapsed)
-        if not incomplete and i >= #arg then
+        local incomplete, r, g, b, a = paths[i](delta, set_total_elapsed)
+        if not incomplete and i >= #paths then
             i = 1
-            for _, path in ipairs(arg) do
+            for _, path in ipairs(paths) do
                 path(0, 0)
             end
             return true, r, g, b, a 
-        elseif not incomplete and i < #arg then
+        elseif not incomplete and i < #paths then
             i = i + 1
             return true, r, g, b, a
         else 
@@ -52,16 +52,16 @@ local function cycle_color( ...)
 end
 
 local function combine_color(...)
-    local arg = {...}
-    assert(#arg > 1)
+    local paths = {...}
+    assert(#paths > 1)
 
     local i = 1
 
     return function (delta, set_total_elapsed)
-        local incomplete, r, g, b, a = arg[i](delta, set_total_elapsed)
-        if not incomplete and i >= #arg then
+        local incomplete, r, g, b, a = paths[i](delta, set_total_elapsed)
+        if not incomplete and i >= #paths then
             return false, r, g, b, a
-        elseif not incomplete and i < #arg then
+        elseif not incomplete and i < #paths then
             i = i + 1
             return true, r, g, b, a
         else 
