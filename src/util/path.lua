@@ -28,4 +28,38 @@ local function color_path(start_color, end_color, duration)
     end
 end
 
+local function combine_color(cycle, ...)
+    assert(type(cycle) == "boolean")
+    assert(arg.n > 1)
+
+    local i = 1
+
+    if cycle then
+        return function (delta)
+            local incomplete, r, g, b, a = arg[i](delta)
+            if not incomplete and i >= arg.n then
+                i = 1
+                return true, r, g, b, a 
+            elseif not incomplete and i < arg.n then
+                i = i + 1
+                return true, r, g, b, a
+            else 
+                return true, r, g, b, a
+            end
+        end
+    else
+        return function (delta)
+            local incomplete, r, g, b, a = arg[i](delta)
+            if not incomplete and i >= arg.n then
+                return false, r, g, b, a
+            elseif not incomplete and i < arg.n then
+                i = i + 1
+                return true, r, g, b, a
+            else 
+                return true, r, g, b, a
+            end
+        end
+    end
+end
+
 return { color = color_path }
