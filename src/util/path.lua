@@ -2,7 +2,13 @@
 local vec = require "util/vec"
 -- TODO i, x, y -> x', y' functions (i = 0: x, y = x, y and i = 1: x, y = x, y)
 
-local function vec_path(start_vec, end_vec, duration)
+local function mod_sin(i, x, y)
+    local v = math.sin(i * math.pi)
+    if v < 0.00001 then v = 0 end
+    return x, y + (v * 100)
+end
+
+local function vec_path(start_vec, end_vec, duration, mod)
     assert(type(start_vec) == "table" and start_vec.type == "vec2")
     assert(type(end_vec) == "table" and end_vec.type == "vec2")
     assert(type(duration) == "number")
@@ -15,14 +21,28 @@ local function vec_path(start_vec, end_vec, duration)
 
     local total_elapsed = 0
 
-    return function (delta) 
-        -- NOTE:  No table access.  Do not reference start or end vec.
-        total_elapsed = total_elapsed + delta
-        if total_elapsed <= duration then
-            local i = total_elapsed / duration
-            return true, sx + (x * i), sy + (y * i)
-        else
-            return false, sx + x, sy + y 
+    if mod then
+        assert(type(mod) == "function")
+        return function (delta) 
+            -- NOTE:  No table access.  Do not reference start or end vec.
+            total_elapsed = total_elapsed + delta
+            if total_elapsed <= duration then
+                local i = total_elapsed / duration
+                return true, mod(i, sx + (x * i), sy + (y * i))
+            else
+                return false, sx + x, sy + y 
+            end
+        end
+    else
+        return function (delta) 
+            -- NOTE:  No table access.  Do not reference start or end vec.
+            total_elapsed = total_elapsed + delta
+            if total_elapsed <= duration then
+                local i = total_elapsed / duration
+                return true, sx + (x * i), sy + (y * i)
+            else
+                return false, sx + x, sy + y 
+            end
         end
     end
 end
@@ -141,4 +161,5 @@ return { color = color_path
        , vec = vec_path
        , combine_vec = combine_vec
        , split_vec = split_vec
+       , mod_sin = mod_sin
        }
