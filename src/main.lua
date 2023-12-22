@@ -1,3 +1,4 @@
+local seq = require "util/seq"
 local vec = require "util/vec"
 local color = require "util/color"
 local path = require "util/path"
@@ -98,7 +99,12 @@ function love.mousepressed(x, y, button, istouch)
     elseif button == 2 then
         local s = vec.vec2(location.x, location.y)
         local e = vec.vec2(x, y)
-        at_path = path.vec(s, e, 5)
+
+        local vs = path.split_vec(s, e, 5)
+
+        local paths = seq.from_list(vs):map(function (v) return path.vec(v.start_vec, v.end_vec, 1) end):eval()
+
+        at_path = path.combine_vec(unpack(paths))
     end
 end
 
