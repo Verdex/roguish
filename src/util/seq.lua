@@ -6,7 +6,7 @@
         The original file in the original repo should be considered to be under the license
         that is present in that repo.
 
-        This file should be considered to be considered to be under the license that is present
+        This file should be considered to be under the license that is present
         in this repo.
 --]]
 
