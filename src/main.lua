@@ -22,12 +22,16 @@ function love.update(dt)
     location.x = location.x + px
     location.y = location.y + py
 
-    for _, triangle in ipairs(triangles) do
-        triangle.x = triangle.x + (10 * dt) 
-        triangle.y = triangle.y + (10 * dt)
-    end
-
     c, r, g, b, a = p(dt)
+
+    if at_path then
+        local incomplete, x, y = at_path(dt)
+        location.x = x
+        location.y = y
+        if not incomplete then
+            at_path = nil
+        end
+    end
 end
 
 function angle(v1, v2) 
@@ -50,7 +54,7 @@ function love.draw()
     love.graphics.setColor(r, g, b, a)
 
     for i = 1, #triangles - (#triangles % 3), 3 do
-        love.graphics.polygon("fill", triangles[i].x, triangles[i].y, triangles[i+1].x, triangles[i+1].y, triangles[i+2].x, triangles[i+2].y)
+        love.graphics.polygon("line", triangles[i].x, triangles[i].y, triangles[i+1].x, triangles[i+1].y, triangles[i+2].x, triangles[i+2].y)
     end
 
     local inside = false
@@ -89,7 +93,13 @@ function love.draw()
 end
 
 function love.mousepressed(x, y, button, istouch)
-    triangles[#triangles+1] = { x = x, y = y }
+    if button == 1 then
+        triangles[#triangles+1] = { x = x, y = y }
+    elseif button == 2 then
+        local s = vec.vec2(location.x, location.y)
+        local e = vec.vec2(x, y)
+        at_path = path.vec(s, e, 5)
+    end
 end
 
 function love.mousereleased(x, y, button, istouch)
