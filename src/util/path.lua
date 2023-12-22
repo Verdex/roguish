@@ -1,7 +1,6 @@
 
--- TODO divide start and end vec into intermediate N segments
+local vec = require "util/vec"
 -- TODO i, x, y -> x', y' functions (i = 0: x, y = x, y and i = 1: x, y = x, y)
--- TODO combine vec path
 
 local function vec_path(start_vec, end_vec, duration)
     assert(type(start_vec) == "table" and start_vec.type == "vec2")
@@ -24,6 +23,43 @@ local function vec_path(start_vec, end_vec, duration)
             return true, sx + (x * i), sy + (y * i)
         else
             return false, sx + x, sy + y 
+        end
+    end
+end
+
+local function split_vec(start_vec, end_vec, count)
+    assert(type(start_vec) == "table" and start_vec.type == "vec2")
+    assert(type(end_vec) == "table" and end_vec.type == "vec2")
+    assert(type(count) == "number")
+
+    local x = end_vec.x - start_vec.x
+    local y = end_vec.y - start_vec.y
+
+    local ret = {}
+    for i = 1, count do
+        local s = vec.vec2(x, y):scale((i - 1) / count):add(start_vec)
+        local e = vec.vec2(x, y):scale(i / count):add(start_vec)
+        ret[#ret+1] = { start_vec = s, end_vec = e }
+    end
+
+    return ret
+end
+
+local function combine_vec(...)
+    local paths = {...}
+    assert(#paths > 1)
+
+    local i = 1
+
+    return function (delta)
+        local incomplete, x, y = paths[i](delta)
+        if not incomplete and i >= #paths then
+            return false, x, y
+        elseif not incomplete and i < #paths then
+            i = i + 1
+            return true, x, y
+        else 
+            return true, x, y
         end
     end
 end
@@ -103,4 +139,6 @@ return { color = color_path
        , combine_color = combine_color 
        , cycle_color = cycle_color
        , vec = vec_path
+       , combine_vec = combine_vec
+       , split_vec = split_vec
        }
