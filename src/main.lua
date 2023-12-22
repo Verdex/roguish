@@ -4,6 +4,7 @@ local path = require "util/path"
 
 -- this only gets called once at the beginning
 function love.load()
+    love.window.setMode(800, 600, {resizable = true}) -- midwidth, midheight are options
     triangles = {}
     m_up = 0
     m_right = 0
