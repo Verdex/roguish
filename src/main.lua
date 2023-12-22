@@ -130,5 +130,8 @@ end
 function love.focus(in_focus)
 end
 
+function love.resize(w, h)
+end
+
 function love.quit()
 end
