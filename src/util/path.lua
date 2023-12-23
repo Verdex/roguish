@@ -1,6 +1,6 @@
 
 local vec = require "util/vec"
--- TODO i, x, y -> x', y' functions (i = 0: x, y = x, y and i = 1: x, y = x, y)
+-- NOTE:  i, x, y -> x', y' functions (i = 0: x, y = x, y and i = 1: x, y = x, y)
 
 local function linear_ease_to_mod(i)
     if i < 0.5 then
