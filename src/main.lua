@@ -100,12 +100,15 @@ function love.mousepressed(x, y, button, istouch)
         local s = vec.vec2(location.x, location.y)
         local e = vec.vec2(x, y)
 
+        --[[
         local vs = path.split_vec(s, e, 5)
 
         local paths = seq.from_list(vs):map(function (v) return path.vec(v.start_vec, v.end_vec, 1, path.mod_sin) end)
                                        :eval()
 
         at_path = path.combine_vec(unpack(paths))
+        --]]
+        at_path = path.vec(s, e, 3, path.mod_sin)
     end
 end
 
