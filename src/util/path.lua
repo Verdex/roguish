@@ -2,13 +2,30 @@
 local vec = require "util/vec"
 -- TODO i, x, y -> x', y' functions (i = 0: x, y = x, y and i = 1: x, y = x, y)
 
-local function mod_sin(i, x, y)
-    --[[local v = math.sin(i * math.pi)
-    if v < 0.00001 then v = 0 end
-    return x, y + (v * 100)--]]
-    local xish = math.cos(i * math.pi * 2) * 100
-    local yish = math.sin(i * math.pi * 2) * 100
-    return  xish + x, yish + y
+local function linear_ease_to_mod(i)
+    if i < 0.5 then
+        return 2 * i
+    else
+        return (-2 * i) + 2
+    end
+end
+
+local function mod_counter_spin(radius)
+    return function(i, x, y)
+        local m = linear_ease_to_mod(i) * radius
+        local xish = m * math.sin(i * math.pi * 2) 
+        local yish = m * math.cos(i * math.pi * 2) 
+        return  xish + x, yish + y
+    end
+end
+
+local function mod_clockwise_spin(radius)
+    return function(i, x, y)
+        local m = linear_ease_to_mod(i) * radius
+        local xish = m * math.cos(i * math.pi * 2) 
+        local yish = m * math.sin(i * math.pi * 2) 
+        return  xish + x, yish + y
+    end
 end
 
 local function vec_path(start_vec, end_vec, duration, mod)
@@ -164,5 +181,6 @@ return { color = color_path
        , vec = vec_path
        , combine_vec = combine_vec
        , split_vec = split_vec
-       , mod_sin = mod_sin
+       , mod_clockwise_spin = mod_clockwise_spin
+       , mod_counter_spin = mod_counter_spin
        }
