@@ -99,8 +99,8 @@ function love.mousepressed(x, y, button, istouch)
     elseif button == 2 then
         local s = vec.vec2(location.x, location.y)
         local e = vec.vec2(x, y)
-
         local vs = path.split_vec(s, e, 3)
+
         local xs = {}
         xs[1] = path.vec(vs[1].start_vec, vs[1].end_vec, 0.5, path.mod_clockwise_spin(70))
         xs[2] = path.vec(vs[2].start_vec, vs[2].end_vec, 0.75, path.mod_counter_spin(50))

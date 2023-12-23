@@ -13,8 +13,9 @@ end
 local function mod_counter_spin(radius)
     return function(i, x, y)
         local m = linear_ease_to_mod(i) * radius
-        local xish = m * math.sin(i * math.pi * 2) 
-        local yish = m * math.cos(i * math.pi * 2) 
+        local v = i * math.pi * 2
+        local xish = m * math.sin(v) 
+        local yish = m * math.cos(v) 
         return  xish + x, yish + y
     end
 end
@@ -22,8 +23,9 @@ end
 local function mod_clockwise_spin(radius)
     return function(i, x, y)
         local m = linear_ease_to_mod(i) * radius
-        local xish = m * math.cos(i * math.pi * 2) 
-        local yish = m * math.sin(i * math.pi * 2) 
+        local v = i * math.pi * 2
+        local xish = m * math.cos(v) 
+        local yish = m * math.sin(v) 
         return  xish + x, yish + y
     end
 end
