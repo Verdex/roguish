@@ -3,6 +3,8 @@ local vec = require "util/vec"
 local color = require "util/color"
 local path = require "util/path"
 
+local text = require "drawable/text"
+
 -- this only gets called once at the beginning
 function love.load()
     love.window.setMode(800, 600, {resizable = true}) -- midwidth, midheight are options
@@ -10,6 +12,8 @@ function love.load()
     m_up = 0
     m_right = 0
     location = {x = 0, y = 0}
+    some_box = text.box(vec.vec2(100, 100), 100, 100)
+    some_box:add_text("blarg and the other longest blarg of all time bingo")
 end
 
 
@@ -91,6 +95,7 @@ function love.draw()
     end
     love.graphics.print("@", location.x, location.y)
 
+    some_box:draw()
 end
 
 function love.mousepressed(x, y, button, istouch)
