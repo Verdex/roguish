@@ -27,10 +27,8 @@ local function draw_box(self)
 
     local lowest_unused_row = y + h
     for i = #self.texts, 1, -1 do
-        -- TODO:  this makes all of the lines nicely even, but it doesn't utilize all the space available
-        -- at the end of the text box.
-        -- Also when this is extended to use multiple texts then each one will have its own length which
-        -- will probably look a bit strange.
+        -- NOTE:  This is making sure all lines are the same length.  The end result is that there is typically
+        -- un-utilized right space.
         local tw = current_font:getWidth(self.texts[i]) 
         local sections = math.floor((tw / w) + 1)
         local char_count = #self.texts[i]
