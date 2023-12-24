@@ -1,23 +1,30 @@
 
 local function draw_box(self) 
-    local x = self.location.x
+    local current_font = love.graphics.getFont()
+    local th = current_font:getHeight()
+
+    local x = self.location.x 
     local y = self.location.y
     local w = self.width
     local h = self.height
 
-    local current_font = love.graphics.getFont()
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.polygon("fill", x, y, 
-                                  x, y + w,
-                                  x + h, y + w,
-                                  x + h, y
+                                  x, y + h,
+                                  x + w, y + h,
+                                  x + w, y 
                          )
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.polygon("line", x, y, 
-                                  x, y + w,
-                                  x + h, y + w,
-                                  x + h, y
+                                  x, y + h,
+                                  x + w, y + h,
+                                  x + w, y 
                          )
+    love.graphics.line(x, y + th, x + w, y + th)
+    
+    y = self.location.y + th
+    h = self.height - th
+
     local lowest_unused_row = y + h
     for i = #self.texts, 1, -1 do
         -- TODO:  this makes all of the lines nicely even, but it doesn't utilize all the space available
@@ -25,12 +32,14 @@ local function draw_box(self)
         -- Also when this is extended to use multiple texts then each one will have its own length which
         -- will probably look a bit strange.
         local tw = current_font:getWidth(self.texts[i]) 
-        local th = current_font:getHeight(self.texts[i])
         local sections = math.floor((tw / w) + 1)
         local char_count = #self.texts[i]
         for sec = sections, 1, -1 do
-            local str = string.sub(self.texts[i], ((char_count / sections) * (sec - 1)) + 1, (char_count / sections) * sec)
             lowest_unused_row = lowest_unused_row - th 
+            if lowest_unused_row < y then
+                break
+            end
+            local str = string.sub(self.texts[i], ((char_count / sections) * (sec - 1)) + 1, (char_count / sections) * sec)
             love.graphics.print(str, x + 1, lowest_unused_row)
         end
     end

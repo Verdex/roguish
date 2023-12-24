@@ -12,7 +12,8 @@ function love.load()
     m_up = 0
     m_right = 0
     location = {x = 0, y = 0}
-    some_box = text.box(vec.vec2(100, 100), 100, 100)
+    some_box = text.box(vec.vec2(100, 100), 100, 200)
+    some_box:add_text("the giant and the fox danced under the pale moon")
     some_box:add_text("blarg and the other longest blarg of all time bingo")
 end
 
