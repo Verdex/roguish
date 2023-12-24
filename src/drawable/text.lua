@@ -18,20 +18,21 @@ local function draw_box(self)
                                   x + h, y + w,
                                   x + h, y
                          )
-    if #self.texts > 0 then
+    local lowest_unused_row = y + h
+    for i = #self.texts, 1, -1 do
         -- TODO:  this makes all of the lines nicely even, but it doesn't utilize all the space available
         -- at the end of the text box.
         -- Also when this is extended to use multiple texts then each one will have its own length which
         -- will probably look a bit strange.
-        local tw = current_font:getWidth(self.texts[1]) 
-        local th = current_font:getHeight(self.texts[1])
+        local tw = current_font:getWidth(self.texts[i]) 
+        local th = current_font:getHeight(self.texts[i])
         local sections = math.floor((tw / w) + 1)
-        local char_count = #self.texts[1]
-        local prev = 1
-        for i = 1, sections do
-            local s = string.sub(self.texts[1], prev, (char_count / sections) * i)
-            prev = ((char_count / sections) * i) + 1
-            love.graphics.print(s, x + 1, y + (th * (i - 1)))
+        local char_count = #self.texts[i]
+        for sec = sections, 1, -1 do
+            local str = string.sub(self.texts[i], ((char_count / sections) * (sec - 1)) + 1, (char_count / sections) * sec)
+            --prev = ((char_count / sections) * sec) + 1
+            --lowest_unused_row = lowest_unused_row + (th * sec)
+            love.graphics.print(str, x + 1, y + (th * (sec - 1)))
         end
     end
 end
@@ -54,5 +55,17 @@ local function box(location, height, width, texts)
            , add_text = add_text_box
            }
 end
+
+--[[
+local function console(location, height, width)
+    assert(type(location) == "table" and location.type == "vec2")
+    assert(type(height) == "number")
+    assert(type(width) == "number")
+
+    return { type = "console"
+           , box = box(location, height, width)
+           }
+end
+--]]
 
 return { box = box }
