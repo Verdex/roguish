@@ -62,16 +62,4 @@ local function box(location, height, width, texts)
            }
 end
 
---[[
-local function console(location, height, width)
-    assert(type(location) == "table" and location.type == "vec2")
-    assert(type(height) == "number")
-    assert(type(width) == "number")
-
-    return { type = "console"
-           , box = box(location, height, width)
-           }
-end
---]]
-
 return { box = box }
