@@ -30,9 +30,8 @@ local function draw_box(self)
         local char_count = #self.texts[i]
         for sec = sections, 1, -1 do
             local str = string.sub(self.texts[i], ((char_count / sections) * (sec - 1)) + 1, (char_count / sections) * sec)
-            --prev = ((char_count / sections) * sec) + 1
-            --lowest_unused_row = lowest_unused_row + (th * sec)
-            love.graphics.print(str, x + 1, y + (th * (sec - 1)))
+            lowest_unused_row = lowest_unused_row - th 
+            love.graphics.print(str, x + 1, lowest_unused_row)
         end
     end
 end
