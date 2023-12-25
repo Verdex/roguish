@@ -3,6 +3,7 @@ local vec = require "util/vec"
 local color = require "util/color"
 local path = require "util/path"
 
+local particle = require "drawable/particle"
 local text = require "drawable/text"
 
 -- this only gets called once at the beginning
@@ -15,13 +16,18 @@ function love.load()
     some_box = text.box(vec.vec2(100, 100), 95, 200)
     some_box:add_text("the giant and the fox danced under the pale moon")
     some_box:add_text("blarg and the other longest blarg of all time bingo")
+
+    particle_manager = particle.manager()
 end
 
 
 -- this function is called continuously
 -- dt is the delta time (in seconds) of the last
 -- time that the function was called
+tdt = 0
 function love.update(dt)
+    tdt = tdt + dt
+
     local px = dt * m_right
     local py = dt * m_up
 
@@ -37,6 +43,18 @@ function love.update(dt)
         if not incomplete then
             at_path = nil
         end
+    end
+
+    particle_manager:update(dt)
+    if tdt > 0.1 then
+        tdt = 0
+        local here = vec.vec2(location.x, location.y)
+        local there = here:clone():add_raw(100, 100)
+        local p = path.vec(here, there, 0.5, path.mod_clockwise_spin(70))
+        local c1 = color.color(1, 1, 1, 1)
+        local c2 = color.color(1, 0, 0, 1)
+        local c = path.color(c1, c2, 0.5)
+        particle_manager:add(particle.particle({}, particle.pixel_drawer, p, c))
     end
 end
 
@@ -57,6 +75,10 @@ c, r, g, b, a = true, w1:values()
 -- will work in
 function love.draw()
     love.graphics.clear()
+
+    particle_manager:draw()
+
+
     love.graphics.setColor(r, g, b, a)
 
     for i = 1, #triangles - (#triangles % 3), 3 do

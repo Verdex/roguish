@@ -22,12 +22,12 @@ local function manager_update(self, delta) -- TODO collision
         for i, p in ipairs(p_list) do
             local _, r, g, b, a = p.color_path(delta)
             local incomplete, x, y = p.vec_path(delta)
-            self.r = r
-            self.g = g 
-            self.b = b
-            self.a = a
-            self.location.x = x
-            self.location.y = y
+            p.r = r
+            p.g = g 
+            p.b = b
+            p.a = a
+            p.location.x = x
+            p.location.y = y
             if not incomplete then
                 remove[#remove+1] = i
             end
@@ -58,6 +58,7 @@ end
 
 local function particle(owner_id, drawer, vec_path, color_path)
     assert(type(owner_id) == "table")
+    assert(type(drawer) == "function")
     assert(type(vec_path) == "function")
     assert(type(color_path) == "function")
 
@@ -78,7 +79,7 @@ local function particle(owner_id, drawer, vec_path, color_path)
 end
 
 local function pixel_drawer(v)
-    love.graphics.point(v.x, v.y)
+    love.graphics.points(v.x, v.y)
 end
 
 return { manager = manager 
