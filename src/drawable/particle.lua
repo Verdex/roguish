@@ -18,15 +18,22 @@ end
 
 local function manager_update(self, delta) -- TODO collision
     for _, p_list in pairs(self.particles) do 
-        for _, p in ipairs(p_list) do
+        local remove = {}
+        for i, p in ipairs(p_list) do
             local _, r, g, b, a = p.color_path(delta)
-            local _, x, y = p.vec_path(delta)
+            local incomplete, x, y = p.vec_path(delta)
             self.r = r
             self.g = g 
             self.b = b
             self.a = a
             self.location.x = x
             self.location.y = y
+            if not incomplete then
+                remove[#remove+1] = i
+            end
+        end
+        for _, r in ipairs(remove) do
+            table.remove(p_list, r)
         end
     end
 end
