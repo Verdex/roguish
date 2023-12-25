@@ -34,7 +34,8 @@ end
 local function manager_draw(self) -- TODO virtual space to screen space transform
     for _, p_list in pairs(self.particles) do 
         for _, p in ipairs(p_list) do
-            p.drawer(p)
+            love.graphics.setColor(p.r, p.g, p.b, p.a)
+            p.drawer(p.location)
         end
     end
 end
@@ -69,6 +70,11 @@ local function particle(owner_id, drawer, vec_path, color_path)
            }
 end
 
+local function pixel_drawer(v)
+    love.graphics.point(v.x, v.y)
+end
+
 return { manager = manager 
        , particle = particle
+       , pixel_drawer = pixel_drawer
        }
