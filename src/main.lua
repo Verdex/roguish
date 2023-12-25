@@ -54,7 +54,7 @@ function love.update(dt)
         local c1 = color.color(1, 1, 1, 1)
         local c2 = color.color(1, 0, 0, 1)
         local c = path.color(c1, c2, 0.5)
-        particle_manager:add(particle.particle({}, particle.pixel_drawer, p, c))
+        particle_manager:add(particle.particle(particle.pixel_drawer, p, c))
     end
 end
 
