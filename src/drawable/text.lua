@@ -43,7 +43,7 @@ local function draw_box(self)
     end
 end
 
-local function add_text_box(self, text)
+local function add_box(self, text)
     self.texts[#self.texts + 1] = text
 end
 
@@ -58,7 +58,7 @@ local function box(location, height, width, texts)
            , height = height
            , width = width
            , draw = draw_box
-           , add_text = add_text_box
+           , add = add_box
            }
 end
 

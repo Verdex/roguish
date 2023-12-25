@@ -14,8 +14,8 @@ function love.load()
     m_right = 0
     location = {x = 0, y = 0}
     some_box = text.box(vec.vec2(100, 100), 95, 200)
-    some_box:add_text("the giant and the fox danced under the pale moon")
-    some_box:add_text("blarg and the other longest blarg of all time bingo")
+    some_box:add("the giant and the fox danced under the pale moon")
+    some_box:add("blarg and the other longest blarg of all time bingo")
 
     particle_manager = particle.manager()
 end
@@ -55,6 +55,9 @@ function love.update(dt)
         local c2 = color.color(1, 0, 0, 1)
         local c = path.color(c1, c2, 0.5)
         particle_manager:add(particle.particle(particle.pixel_drawer, p, c))
+        local i = 0
+        for _, _ in pairs(particle_manager.particles) do i = i + 1 end
+        some_box:add(string.format("%d", i))
     end
 end
 
